@@ -1,128 +1,219 @@
 /* Reset default styles */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Global styles */
+  body {
+    font-family: Helvetica, sans-serif;
+  }
+  
+  /* Profile info box */
+  .profile-info-box {
+    border: 1px solid #ccc;
+    border-radius: 1px;
+    padding: 5px;
+    background-color: #f9f9f9;
+    max-width: 350px; /* Adjust the maximum width as needed */
+    margin: auto; /* Center the box horizontally */
+  }
+  
+  /* Profile image */
+  .profile {
+    margin-bottom: 20px;
+  }
+  
+  /* Personal info grid */
+  .personal-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5px;
+  }
+  
+  /* Form group */
+  .form-group {
+    margin-bottom: 10px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: normal;
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 5px;
+  }
+  
+  /* Container for cards */
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Card styles */
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    width: 350px;
+    margin-right: 10px;
+  }
+  
+  .card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    padding: 10px;
+  }
+  
+  /* Positioning */
+  .left-div {
+    position: absolute;
+    left: 0;
+    top: 17%; /* Adjust as needed */
+    transform: translateY(-50%);
+    background-color: #f0f0f0;
+  }
+  
+  /* Additional styles */
+  .text-box {
+    margin-top: 10px;
+  }
+  
+  .text-box textarea {
+    width: 100%;
+    padding: 5px;
+    margin: 2px;
+  }
+  
+  
+  
+  /* New styles for element positioning */
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Top section */
+  .form-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 15px;
+  }
+  
+  .form-top-left,
+  .form-top-right {
+    margin-right: 10px;
+  }
+  
+  .form-top-right {
+    margin-right: 0;
+  }
+  
+  /* Increase width of text areas */
+  textarea.form-control {
+    width: 100%;
+  }
+  
+  /* Adjust height of text areas */
+  textarea.form-control {
+    min-height: 150px;
+    min-width: 150px;
+  }
+/* Card summary styles */
+.summary-card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    width: 350px; /* Adjust width as needed */
+    height: 460px;
+    margin: 20px auto; /* Center the card horizontally with some margin */
+    position: absolute;
+    left: 0;
+    top: 33%;
+  }
+  
+  .summary-card .card-header {
+    background-color: #007bff; /* Header background color */
+    color: #fff; /* Header text color */
+    padding: 10px;
+  }
+  
+  .summary-card .card-header center {
+    margin-bottom: 10px; /* Space below the header text */
+  }
+  
+  .summary-card .card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    padding: 10px;
+  }
+  
+  /* Additional styles for form groups in summary card */
+  .summary-card .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .summary-card .form-group label {
+    font-weight: normal; /* Make labels bold */
+  }
+  
+  .summary-card .form-control {
+    width: calc(100% - 20px); /* Adjust input width */
+    padding: 5px;
+  }
 
-/* Global styles */
-body {
-  font-family: Helvetica, sans-serif;
-}
+  /* Add this style to your CSS file */
+.blood-work-box {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #ffffff;
+    width: 340px;
+    height: 715px;
+    margin: auto;
+    margin-top: 20px;
+    position: absolute;
+    left: 75%;
+    top: -2.8%;
+   
+  }
+  
+  .blood-work-box h2 {
+    margin-bottom: 10px;
+  }
+  
+  .scrollable-table {
+    max-height: 630px;
+    overflow-y: auto;
 
-/* Profile info box */
-.profile-info-box {
-  border: 1px solid #ccc;
-  border-radius: 1px;
-  padding: 5px;
-  background-color: #f9f9f9;
-  max-width: 455px; /* Adjust the maximum width as needed */
-  margin: auto; /* Center the box horizontally */
-}
-
-/* Profile image */
-.profile {
-  margin-bottom: 20px;
-}
-
-/* Personal info grid */
-.personal-info {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 5px;
-}
-
-/* Form group */
-.form-group {
-  margin-bottom: 10px;
-}
-
-.form-group label {
-  display: block;
-  font-weight: normal;
-}
-
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 5px;
-}
-
-/* Container for cards */
-.container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-/* Card styles */
-.card {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 20px;
-  width: 350px;
-  margin-right: 10px;
-}
-
-.card-body {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
-  padding: 10px;
-}
-
-/* Positioning */
-.left-div {
-  position: fixed;
-  left: 0;
-  top: 17%; /* Adjust as needed */
-  transform: translateY(-50%);
-  background-color: #f0f0f0;
-}
-
-/* Additional styles */
-.text-box {
-  margin-top: 10px;
-}
-
-.text-box textarea {
-  width: 100%;
-  padding: 5px;
-  margin: 2px;
-}
-
-
-
-/* New styles for element positioning */
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Top section */
-.form-top {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 15px;
-}
-
-.form-top-left,
-.form-top-right {
-  margin-right: 10px;
-}
-
-.form-top-right {
-  margin-right: 0;
-}
-
-/* Increase width of text areas */
-textarea.form-control {
-  width: 100%;
-}
-
-/* Adjust height of text areas */
-textarea.form-control {
-  min-height: 150px;
-  min-width: 150px;
-}
+  }
+  
+  .scrollable-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .scrollable-table th, .scrollable-table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .scrollable-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .form-control2 {
+    width: 50px;
+  }
+  .form-controle {
+   width: 150px;
+  }
