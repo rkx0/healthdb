@@ -1,0 +1,119 @@
+/* Add this line to the top of your stylesheet */
+
+.profile-info-box {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  .profile {
+    margin-bottom: 20px;
+  }
+  
+  .personal-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 10px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: normal;
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 5px;
+  }
+
+  /* Add this style at the end of your existing CSS */
+
+.profile-info-box {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    max-width: 275px; /* Adjust the maximum width as needed */
+    margin: auto; /* Center the box horizontally */
+  }
+  
+  
+body, * {
+    font-family: Helvetica, sans-serif;
+  }
+  
+  .container {
+    display: flex;  /* Make the container a flex container */
+    flex-wrap: wrap;  /* Wrap elements to the next line if needed */
+    justify-content: center;  /* Center elements horizontally */
+    margin-bottom: 20px; /* Add some margin between containers */
+  }  
+
+  .card {  /* Add styles to the exterior box */
+    border: 1px solid #ddd;  /* Add a border */
+    border-radius: 4px;  /* Add rounded corners */
+    padding: 20px;  /* Adjust padding */
+    width: 350px;  /* Set a smaller width for the box */
+    margin-right: 10px; /* Add spacing between boxes */
+  }
+  
+  .card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* Two equal columns */
+    grid-gap: 10px;  /* Spacing between elements */
+    padding: 10px;  /* Adjust padding */
+  }
+
+  .card {
+    float: left;
+    margin-right: 10px; /* Add spacing between boxes */
+  }
+  
+  .card:last-child {  /* Remove margin from last box */
+    margin-right: 0;
+  }
+  
+  /* New styles for element positioning */
+  .form-group {
+    display: flex;
+    flex-direction: column;  /* Stack elements vertically */
+  }
+  /* Top section */
+  .form-top {
+    display: grid;  /* Use grid layout for top section */
+    grid-template-columns: 1fr 1fr;  /* Two columns within top section */
+    margin-bottom: 15px;  /* Space between top and bottom sections */
+  }
+  .form-top-left,
+  .form-top-right {
+    margin-right: 10px;  /* Add margin to right of each element */
+  }
+  .form-top-right {
+    margin-right: 0;  /* Remove right margin for last element in top section */
+  }
+
+  /* Increase width of text areas */
+  textarea.form-control {
+    width: 100%; /* Set width to 100% of its container */
+}
+
+/* Adjust height of text areas */
+textarea.form-control {
+    min-height: 150px; /* Set minimum height */
+    min-width: 150px;
+}
+/* Add this style at the end of your existing CSS */
+/* Add this style at the end of your existing CSS */
+
+.left-div {
+    position: fixed; /* or absolute */ left: 0;
+    top: 17%; /* adjust as needed */ transform: translateY(-50%); background-color: #f0f0f0;
+}
+
+  
