@@ -66,13 +66,17 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
 
+        # Check if the username exists and matches the provided password
         if username in data and data[username]['password'] == password:
-            # Check if patient JSON exists
+            # Check if the user has a patient ID
             patient_id = data[username].get('patient_id')
-            if not patient_id or not os.path.exists(f'patient_{patient_id}.json'):
-                return redirect(url_for('add_patient'))  # Redirect to add_patient route
+            if patient_id:
+                # Check if the patient info JSON file exists
+                if os.path.exists(os.path.join('patients', patient_id, 'patient_info.json')):
+                    return redirect(url_for('dashboard', patient_id=patient_id))
 
-            return redirect(url_for('dashboard'))
+            # If patient info JSON file doesn't exist, redirect to add_patient route
+            return redirect(url_for('add_patient', patient_id=patient_id))
         else:
             error = "Invalid username or password."
 
@@ -87,21 +91,11 @@ def add_patient():
         gender = request.form.get('gender')
         country = request.form.get('country')
         city = request.form.get('city')
-        username = request.form.get('username')
+        patient_id = request.args.get('patient_id')
 
-        # Load user data
-        data = load_data()
-
-        # Get patient ID from user data
-        user_data = data.get(username, {})
-        patient_id = user_data.get('patient_id')
-
-        if not patient_id:
-            # Generate patient ID if not already present
-            patient_id = generate_patient_id()
-            # Update user data with generated patient ID
-            data[username] = {'password': data.get(username, {}).get('password'), 'usertype': data.get(username, {}).get('usertype'), 'patient_id': patient_id}
-            save_data(data)
+        # Check if patient_id is None
+        if patient_id is None:
+            return "Error: Patient ID not provided."
 
         # Create directory for patient if not exists
         patient_directory = os.path.join('patients', patient_id)
@@ -119,14 +113,17 @@ def add_patient():
         with open(os.path.join(patient_directory, 'patient_info.json'), 'w') as f:
             json.dump(patient_data, f, indent=4)
 
-        return redirect(url_for('dashboard'))
+        # Redirect to dashboard with patient_id
+        return redirect(url_for('dashboard', patient_id=patient_id))
 
     return render_template('patient.html')
 
 @app.route('/dashboard')
 def dashboard():
+    patient_id = request.args.get('patient_id')
     # Your dummy dashboard logic (optional)
-    return render_template('dashboard.html')  # Render dashboard template (if needed)
+    return render_template('dashboard.html', patient_id=patient_id)  # Render dashboard template (if needed)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    # Run the app, binding to all network interfaces
+    app.run(host='0.0.0.0', port=5000, debug=True)

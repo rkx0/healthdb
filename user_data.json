@@ -1,12 +1,7 @@
 {
-    "aDIBrABBANI": {
-        "password": "nigga",
+    "Taiyeb": {
+        "password": "12345",
         "usertype": "patient",
-        "patient_id": "a3400972-6a78-4767-9f81-7a22af2f9721"
-    },
-    "null": {
-        "password": null,
-        "usertype": null,
-        "patient_id": "f34013cd-50db-4993-a5a8-0a1c8f3c1c7a"
+        "patient_id": "18fcdf4f-2fb4-46c3-b6b0-f17787900fd4"
     }
 }
