@@ -119,10 +119,11 @@ def add_patient():
 
 @app.route('/dashboard')
 def dashboard():
-    """
-    Dashboard route.
-    """
     patient_id = request.args.get('patient_id')
+    # Check if patient_id is None
+    if patient_id is None:
+        return "Error: Patient ID not provided."
+    # Your dummy dashboard logic (optional)
     return render_template('dashboard.html', patient_id=patient_id)
 
 @app.route('/patients/<patient_id>/patient_info.json')

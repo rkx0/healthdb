@@ -16,8 +16,8 @@
             <input type="text" id="userId" placeholder="Enter user ID">
           </div>
           <div class="form-group">
-            <label for="patientId">Patient ID</label>
-            <input type="text" id="patientId" placeholder="Enter patient ID">
+            <label for="patient_id">Patient ID</label>
+            <input type="text" id="patient_id" placeholder="Enter patient ID">
           </div>
           <div class="form-group">
             <button onclick="populatePersonalInfo()">Load Patient Data</button>
@@ -71,7 +71,7 @@
         document.getElementById('gender').value = data.gender;
         document.getElementById('country').value = data.country;
         document.getElementById('city').value = data.city;
-        document.getElementById('patientId').value = data.patientId;
+        document.getElementById('patient_id').value = patientId; // Set patient ID from URL
         document.getElementById('additionalInfo').value = data.additionalInfo;
       })
       .catch(error => {
@@ -80,13 +80,19 @@
       });
   }
 
+  // Function to populate personal information based on patient ID
+  function populatePersonalInfo() {
+    const patientId = document.getElementById('patient_id').value;
+    fetchPatientInfo(patientId);
+  }
+
   // Extract patient ID from the URL and call fetchPatientInfo function
   const urlParams = new URLSearchParams(window.location.search);
   const patientId = urlParams.get('patient_id');
   if (patientId) {
     fetchPatientInfo(patientId);
   }
-</script>
+  </script>
  <div class="big">
    <div class="card1">
        <!-- Heart Rate box content -->

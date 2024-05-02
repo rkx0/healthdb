@@ -3,5 +3,10 @@
         "password": "12345",
         "usertype": "patient",
         "patient_id": "18fcdf4f-2fb4-46c3-b6b0-f17787900fd4"
+    },
+    "Abrar": {
+        "password": "12345",
+        "usertype": "patient",
+        "patient_id": "abacd712-e149-4594-9661-cb500013d507"
     }
 }
