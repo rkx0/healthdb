@@ -37,7 +37,7 @@
           </div>
           <div class="form-group">
             <label for="additionalInfo">Doctor's Note</label>
-            <textarea id="additionalInfo" rows="4" placeholder="Additional information" style="width: 100%;" readonly></textarea>
+            <textarea id="additionalInfo" rows="4" cols="100" placeholder="Additional information" style="width: 340%; resize: none;" readonly></textarea>
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@
         document.getElementById('country').value = data.country;
         document.getElementById('city').value = data.city;
         document.getElementById('patient_id').value = patientId; // Set patient ID from URL
-        document.getElementById('additionalInfo').value = data.additionalInfo;
+        document.getElementById('additionalInfo').value = data.additionalInfo || ''; // Set Doctor's Note or blank if undefined
       })
       .catch(error => {
         console.error(error);
