@@ -1,0 +1,50 @@
+/* CSS for Health Info Box */
+.health-info-box {
+    border: 2px solid #000; /* Border around the box */
+    height: 50%; /* Adjust the height of the box (percentage) */
+    width: 40%; /* Increased width of the box (percentage) */
+    padding: 1%; /* Padding inside the box */
+}
+
+/* CSS for Doctor's Note Box */
+.doctor-note-box {
+    border: 2px solid #000; /* Border around the box */
+    height: 30%; /* Adjust the height of the box (percentage) */
+    width: 40%; /* Increased width of the box (percentage) */
+    padding: 1%; /* Padding inside the box */
+    margin-top: 5%; /* Add space between the boxes */
+}
+
+/* Container CSS */
+.container {
+    position: absolute; /* Positioning container */
+    top: 0; /* Align container to the top */
+    left: 0; /* Align container to the left */
+    width: 100%; /* Ensure container takes full width */
+}
+
+/* Form CSS */
+.health-info-box form,
+.doctor-note-box form {
+    height: 100%; /* Take up 100% of the parent's height */
+}
+
+/* Form Group CSS */
+.health-info-box .form-group,
+.doctor-note-box .form-group {
+    margin-bottom: 1%; /* Adjust spacing between form groups */
+    height: calc(50% - 1%); /* Divide the height equally among the form groups */
+}
+
+/* Label CSS */
+.health-info-box .form-group label,
+.doctor-note-box .form-group label {
+    display: block; /* Display labels as block elements */
+    margin-bottom: 0.5%; /* Adjust spacing between labels */
+}
+
+/* Input Field CSS */
+.health-info-box .form-control,
+.doctor-note-box .form-control {
+    width: 100%; /* Set input field width to 100% */
+}
