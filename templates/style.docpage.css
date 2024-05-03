@@ -257,22 +257,23 @@ th {
 .lock-button:hover {
     background-color: #ff0000; /* Adjust hover background color */
 }
-
 .your-patients-box {
     border: 1%;
     border-style: solid;
     border-color: #ccc;
     border-radius: 1%;
+    padding: 1%;
     background-color: #ffffff;
-    max-width: 100%; /* Remove width property */
+    width: 27%; /* Adjusted width */
+    max-width: 100%;
     height: auto;
     margin-top: 0; /* Adjusted margin from the top */
+    margin-right: 1%; /* Adjusted margin from the right */
     position: absolute;
-    right: 0; /* Adjusted position from the right */
+    right: 0; /* Align the right side of the box with the right side of the screen */
     top: 0; /* Align the top of the box with the top of the page */
     bottom: 0; /* Align the bottom of the box with the bottom of the page */
 }
-
 
 .your-patients-box h2 {
     margin-bottom: 2%;
@@ -315,23 +316,7 @@ th {
 .view-button:hover {
     background-color: #0056b3;
 }
-.your-patients-box {
-    border: 1%;
-    border-style: solid;
-    border-color: #ccc;
-    border-radius: 1%;
-    padding: 1%;
-    background-color: #ffffff;
-    width: 27%; /* Adjusted width */
-    max-width: 100%;
-    height: auto;
-    margin-top: 0; /* Adjusted margin from the top */
-    margin-right: 1%; /* Adjusted margin from the right */
-    position: absolute;
-    right: 0; /* Align the right side of the box with the right side of the screen */
-    top: 0; /* Align the top of the box with the top of the page */
-    bottom: 0; /* Align the bottom of the box with the bottom of the page */
-}
+
 
 .your-patients-box h2 {
     margin-bottom: 2%;
@@ -364,14 +349,28 @@ th {
 
 /* Style for view button */
 .view-button {
-    padding: 5px;
+    padding: 2%; /* Adjusted padding */
     background-color: #007bff;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 4%; /* Adjusted border radius */
     cursor: pointer;
 }
 
 .view-button:hover {
     background-color: #0056b3;
+}
+
+/* Style for search bar */
+.search-bar2 {
+    margin-bottom: 10px; /* Adjust margin as needed */
+}
+
+.search-input2 {
+    width: 100%; /* Adjust width as needed */
+    padding: 1%; /* Adjust padding as needed */
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
 }
