@@ -37,7 +37,7 @@
           </div>
           <div class="form-group">
             <label for="additionalInfo">Doctor's Note</label>
-            <textarea id="additionalInfo" rows="4" cols="100" placeholder="Additional information" style="width: 340%; resize: none;" readonly></textarea>
+            <textarea id="additionalInfo" rows="4" cols="100" placeholder="Additional information" style="width: 330%; resize: none;" readonly></textarea>
           </div>
         </div>
       </div>
@@ -201,28 +201,29 @@
   <div class="card-body">
     <div class="form-group">
       <label for="weight">Weight (kg)</label>
-      <input type="text" class="form-control" id="weight" placeholder="Enter weight">
+      <input type="number" class="form-control" id="weight" placeholder="Enter weight" maxlength="3">
     </div>
     <div class="form-group">
       <label for="height">Height (cm)</label>
-      <input type="text" class="form-control" id="height" placeholder="Enter height">
+      <input type="number" class="form-control" id="height" placeholder="Enter height" maxlength="3">
     </div>
-    <!-- Include more fields for BMI, Body Fat%, etc. -->
     <div class="form-group">
       <label for="bmi">BMI</label>
-      <input type="text" class="form-control" id="bmi" placeholder="Enter BMI">
+      <input type="text" class="form-control" id="bmi" placeholder="BMI" readonly>
     </div>
     <div class="form-group">
       <label for="bodyFat">Body Fat (%)</label>
-      <input type="text" class="form-control" id="bodyFat" placeholder="Enter body fat percentage">
+      <input type="text" class="form-control" id="bodyFat" placeholder="Body Fat %" readonly>
     </div>
+
     <div class="form-group">
-      <label for="visceralFat">Visceral Fat Mass</label>
-      <input type="text" class="form-control" id="visceralFat" placeholder="Enter visceral fat mass">
+      <label for="sleep">Sleep</label>
+      <input type="text" class="form-control" id="sleep" placeholder="in hours">
     </div>
+    
     <div class="form-group">
       <label for="totalBodyWater">Total Body Water</label>
-      <input type="text" class="form-control" id="totalBodyWater" placeholder="Enter total body water">
+      <input type="text" class="form-control" id="totalBodyWater" placeholder="Enter total body water" readonly>
     </div>
     <div class="form-group">
       <label for="implications">Implications</label>
@@ -235,6 +236,111 @@
   </div>
 </div>
 </div>
+<script>
+  // Calculate BMI based on weight and height
+function calculateBMI() {
+  const weightInput = document.getElementById('weight');
+  const heightInput = document.getElementById('height');
+
+  // Check if weight and height inputs have valid values
+  if (weightInput.value && heightInput.value) {
+    const weight = parseFloat(weightInput.value);
+    const height = parseFloat(heightInput.value) / 100; // Convert height to meters
+    const bmi = (weight / (height * height)).toFixed(2); // Calculate BMI with 2 decimal places
+    document.getElementById('bmi').value = bmi;
+
+    // Call calculateBodyFat() after BMI calculation
+    calculateBodyFat();
+  }
+}
+  // Calculate body fat based on BMI, gender, and age
+  function calculateBodyFat() {
+    const bmi = parseFloat(document.getElementById('bmi').value);
+    const age = parseFloat(document.getElementById('age').value);
+    const gender = document.getElementById('gender').value;
+
+    let bodyFat;
+    if (gender === 'Male') {
+      bodyFat = (1.20 * bmi) + (0.23 * age) - 16.2;
+    } else if (gender === 'Female') {
+      bodyFat = (1.20 * bmi) + (0.23 * age) - 5.4;
+    }
+
+    document.getElementById('bodyFat').value = bodyFat.toFixed(2); // Set body fat with 2 decimal places
+  }
+
+  // Event listener for input changes
+  document.getElementById('weight').addEventListener('input', calculateBMI);
+  document.getElementById('height').addEventListener('input', calculateBMI);
+  // No need to add input event listener for age and gender since they are readonly
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('gender').addEventListener('change', function() {
+      calculateTotalBodyWater();
+    });
+  });
+  
+  function calculateBMI() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value) / 100; // Convert height to meters
+    const bmi = (weight / (height * height)).toFixed(2);
+    document.getElementById('bmi').value = bmi;
+  }
+  
+  function calculateBodyFat() {
+    const bmi = parseFloat(document.getElementById('bmi').value);
+    const age = parseFloat(document.getElementById('age').value);
+    const gender = document.getElementById('gender').value;
+  
+    let bodyFat;
+    if (gender === 'Male' || gender === 'male') {
+      bodyFat = (1.20 * bmi) + (0.23 * age) - 16.2;
+    } else if (gender === 'Female' || gender === 'female') {
+      bodyFat = (1.20 * bmi) + (0.23 * age) - 5.4;
+    }
+  
+    document.getElementById('bodyFat').value = bodyFat.toFixed(2);
+  }
+  
+  function calculateTotalBodyWater() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value);
+    const age = parseFloat(document.getElementById('age').value);
+    const gender = document.getElementById('gender').value;
+  
+    let totalBodyWater;
+    if (gender === 'Male') {
+      totalBodyWater = 2.447 - (0.09156 * age) + (0.1074 * height) + (0.3362 * weight);
+    } else if (gender === 'Female') {
+      totalBodyWater = -2.097 + (0.1069 * height) + (0.2466 * weight);
+    }
+  
+    document.getElementById('totalBodyWater').value = totalBodyWater.toFixed(2);
+  }
+  
+  // Event listeners for input changes
+  document.getElementById('weight').addEventListener('input', function() {
+    calculateBMI();
+    calculateBodyFat();
+    calculateTotalBodyWater();
+  });
+  document.getElementById('height').addEventListener('input', function() {
+    calculateBMI();
+    calculateBodyFat();
+    calculateTotalBodyWater();
+  });
+  document.getElementById('age').addEventListener('input', function() {
+    calculateBodyFat();
+    calculateTotalBodyWater();
+  });
+  document.getElementById('gender').addEventListener('change', function() {
+    calculateBodyFat();
+    calculateTotalBodyWater();
+  });
+  </script>
+    
 <div class="blood-work-box">
 <h2>Blood Work</h2>
 <div class="scrollable-table">

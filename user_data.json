@@ -1,12 +1,17 @@
 {
-    "Taiyeb": {
+    "Aiman Sadiq": {
         "password": "12345",
         "usertype": "patient",
-        "patient_id": "18fcdf4f-2fb4-46c3-b6b0-f17787900fd4"
+        "patient_id": "01a8a95d-38c0-4a6c-8a8e-7e8b9e3450ad"
     },
     "Abrar": {
         "password": "12345",
         "usertype": "patient",
-        "patient_id": "abacd712-e149-4594-9661-cb500013d507"
+        "patient_id": "ae196847-3b29-479f-98aa-f57f09af8879"
+    },
+    "Adib Rabbani": {
+        "password": "1234",
+        "usertype": "patient",
+        "patient_id": "3a4994d5-d622-4d2e-a4f6-ec746ec1af9a"
     }
 }

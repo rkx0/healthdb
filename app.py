@@ -139,5 +139,51 @@ def serve_patient_info(patient_id):
     else:
         return "Error: Patient info not found."
 
+@app.route('/save_patient_info', methods=['POST'])
+def save_patient_info():
+    """
+    Route to save patient information.
+    """
+    if request.method == 'POST':
+        name = request.form.get('name')
+        age = request.form.get('age')
+        gender = request.form.get('gender')
+        country = request.form.get('country')
+        city = request.form.get('city')
+        weight = request.form.get('weight')
+        height = request.form.get('height')
+        bmi = request.form.get('bmi')
+        body_fat = request.form.get('bodyFat')
+        total_body_water = request.form.get('totalBodyWater')
+        patient_id = request.form.get('patient_id')
+
+        if patient_id is None:
+            return "Error: Patient ID not provided."
+
+        patient_directory = os.path.join('patients', patient_id)
+        if not os.path.exists(patient_directory):
+            os.makedirs(patient_directory)
+
+        patient_data = {
+            'name': name,
+            'age': age,
+            'gender': gender,
+            'country': country,
+            'city': city,
+            'weight': weight,
+            'height': height,
+            'bmi': bmi,
+            'body_fat': body_fat,
+            'total_body_water': total_body_water
+        }
+        with open(os.path.join(patient_directory, 'patient_info.json'), 'w') as f:
+            json.dump(patient_data, f, indent=4)
+
+        return jsonify({'message': 'Patient information saved successfully.'})
+
+    return jsonify({'error': 'Invalid request method.'})
+
+        
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
