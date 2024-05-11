@@ -1,0 +1,11 @@
+{
+    "patientId": "patient_id_here",
+    "data": {
+        "weight": "14",
+        "height": "15",
+        "bmi": "622.22",
+        "bodyFat": "731.38",
+        "totalBodyWater": "6.80",
+        "sleep": "5"
+    }
+}

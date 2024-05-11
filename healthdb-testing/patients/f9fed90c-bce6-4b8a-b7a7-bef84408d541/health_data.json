@@ -1,0 +1,11 @@
+{
+    "patientId": "patient_id_here",
+    "data": {
+        "weight": "",
+        "height": "",
+        "bmi": "NaN",
+        "bodyFat": "",
+        "totalBodyWater": "",
+        "sleep": ""
+    }
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">  </head>
+<body>
+    <div class="signup-form">
+        <h1>Signup</h1>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form action="/" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br><br>
+            <label for="usertype">User Type:</label><br>
+            <input type="checkbox" id="patient" name="usertype" value="patient">
+            <label for="patient">Patient</label>
+            <input type="checkbox" id="doctor" name="usertype" value="doctor">
+            <label for="doctor">Doctor</label><br><br>
+            <button type="submit">Signup</button>
+        </form>
+  <form action="{{ url_for('login') }}" method="POST">
+    <button type="submit">Go to Login</button>
+  </form>
+    </div>
+</body>
+</html>

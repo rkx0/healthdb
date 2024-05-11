@@ -1,0 +1,380 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Global styles */
+body {
+    font-family: Helvetica, sans-serif;
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}
+
+
+/* Doctor info box */
+.doctor-info-box {
+    border: 1%;
+    border-style: solid;
+    border-color: #ccc;
+    border-radius: 1%;
+    padding: 2%;
+    height: auto;
+    width: 30%;
+    max-width: 100%;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.left-div {
+    padding: 1%;
+    width: 100%;
+    background-color: #ffffff;
+    border: 1% solid #ddd;
+    border-radius: 4%;
+    margin: auto;
+}
+
+/* Form group */
+.form-group {
+    margin-bottom: 3%;
+}
+
+.form-group label {
+    display: block;
+    font-weight: normal;
+}
+
+.form-group input {
+    width: 96%;
+    padding: 1%;
+    margin-top: 1%;
+    margin-bottom: 1.5%;
+    box-sizing: border-box;
+}
+
+.summary-card {
+    border: 1%;
+    border-style: solid;
+    border-color: #ccc;
+    padding: 1%;
+    width: 30%;
+    height: 55%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.summary-card .card-header {
+    background-color: #f0f2f3;
+    color: #fff;
+    padding: 10px;
+}
+
+.summary-card .card-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+    padding: 10px;
+    width: 100%;
+}
+
+/* Additional styles for form groups in summary card */
+.summary-card .form-group {
+    margin-bottom: 15px;
+}
+
+.summary-card .form-group label {
+    font-weight: normal;
+}
+
+.summary-card .form-control {
+    width: calc(100% - 20px);
+    padding: 5px;
+}
+
+/* Make text area scrollable */
+.scrollable-textarea {
+    height: 150px;
+    overflow-y: auto;
+}
+
+.implication9 {
+    background-color: #007bff;
+}
+
+/* Increase width of doctor's note text box */
+.doctor-note {
+    width: 96%;
+    padding: 1%;
+    margin-top: 1%;
+    margin-bottom: 1.5%;
+    box-sizing: border-box;
+}
+
+/* Center the button */
+.summary-card button {
+    width: 50%;
+    padding: 10px;
+    margin-top: 20px;
+}
+/* Styles for the patients box */
+.patients-box {
+    border: 1%;
+    border-style: solid;
+    border-color: #ccc;
+    border-radius: 1%;
+    padding: 1%;
+    background-color: #ffffff;
+    width: 40%;
+    max-width: 100%;
+    height: 100vh; /* Adjusted height */
+    margin-top: 0;
+    margin-left: 1%;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-50%);
+}
+
+.patients-box h2 {
+    margin-bottom: 2%;
+}
+
+/* Styles for the table */
+.table-container {
+    overflow-y: auto; /* Make the table vertically scrollable */
+    max-height: 95%; /* Adjusted max height */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 1%;
+    text-align: left;
+    border-bottom: 1%;
+    border-bottom-style: solid;
+    border-bottom-color: #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Style for form control */
+.form-control {
+    width: 100%;
+}
+
+/* Style for request button */
+.request-button {
+    padding: 1%;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 1%;
+    cursor: pointer;
+}
+
+.request-button:hover {
+    background-color: #0056b3;
+}
+
+  
+  
+  .patients-box h2 {
+    margin-bottom: 2%;
+  }
+  
+  /* Styles for the table */
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 1%;
+    text-align: left;
+    border-bottom: 1%;
+    border-bottom-style: solid;
+    border-bottom-color: #ddd;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  /* Style for form control */
+  .form-control {
+    width: 100%;
+  }
+  
+  /* Style for request button */
+  .request-button {
+    padding: 1%;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 1%;
+    cursor: pointer;
+  }
+  
+  .request-button:hover {
+    background-color: #0056b3;
+  }
+  .search-bar {
+    margin-bottom: 10px; /* Adjust margin as needed */
+}
+
+.search-input {
+    width: 100%; /* Adjust width as needed */
+    padding: 1%; /* Adjust padding as needed */
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+.lock-button {
+    padding: 8%; /* Adjust padding as needed */
+    background-color: #ffffff; /* Adjust button background color */
+    color: #000000; /* Adjust button text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.lock-button:hover {
+    background-color: #ff0000; /* Adjust hover background color */
+}
+.your-patients-box {
+    border: 1%;
+    border-style: solid;
+    border-color: #ccc;
+    border-radius: 1%;
+    padding: 1%;
+    background-color: #ffffff;
+    width: 27%; /* Adjusted width */
+    max-width: 100%;
+    height: auto;
+    margin-top: 0; /* Adjusted margin from the top */
+    margin-right: 1%; /* Adjusted margin from the right */
+    position: absolute;
+    right: 0; /* Align the right side of the box with the right side of the screen */
+    top: 0; /* Align the top of the box with the top of the page */
+    bottom: 0; /* Align the bottom of the box with the bottom of the page */
+}
+
+.your-patients-box h2 {
+    margin-bottom: 2%;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 1%;
+    text-align: left;
+    border-bottom: 1%;
+    border-bottom-style: solid;
+    border-bottom-color: #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.form-control-new {
+    width: 100%;
+}
+
+.view-button {
+    padding: 1%;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 1%;
+    cursor: pointer;
+}
+
+.view-button:hover {
+    background-color: #0056b3;
+}
+
+
+.your-patients-box h2 {
+    margin-bottom: 2%;
+}
+
+/* Styles for the table */
+.table-container {
+    overflow-y: auto; /* Make the table vertically scrollable */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 1%;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Style for form control */
+.form-control2 {
+    width: 100%;
+}
+
+/* Style for view button */
+.view-button {
+    padding: 2%; /* Adjusted padding */
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4%; /* Adjusted border radius */
+    cursor: pointer;
+}
+
+.view-button:hover {
+    background-color: #0056b3;
+}
+
+/* Style for search bar */
+.search-bar2 {
+    margin-bottom: 10px; /* Adjust margin as needed */
+}
+
+.search-input2 {
+    width: 100%; /* Adjust width as needed */
+    padding: 1%; /* Adjust padding as needed */
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}

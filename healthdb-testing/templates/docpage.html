@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Page</title>
+    <link rel="stylesheet" href="style.docpage.css">
+</head>
+<body>
+
+<div class="doctor-info-box">
+    <div class="left-div">
+        <h2>Doctor Information</h2>
+        <form action="#">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="speciality">Speciality:</label>
+                <input type="text" id="speciality" name="speciality" placeholder="Enter your speciality">
+            </div>
+            <div class="form-group">
+                <label for="healthcare">Healthcare Institution:</label>
+                <input type="text" id="healthcare" name="healthcare" placeholder="Enter your healthcare institution">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="summary-card">
+    <div class="card-body">
+        <form action="#">
+            <div class="form-group">
+                <label for="patient-name">Patient Name:</label>
+                <input type="text" id="patient-name" name="patient-name" placeholder="Enter patient name">
+            </div>
+            <div class="form-group">
+                <label for="patient-id">Patient ID:</label>
+                <input type="text" id="patient-id" name="patient-id" placeholder="Enter patient ID">
+            </div>
+            <div class="form-group">
+                <label for="doctors-note">Doctor's Note:</label>
+                <textarea id="doctors-note" name="doctors-note" class="scrollable-textarea" placeholder="Enter doctor's note"></textarea>
+            </div>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</div>
+<div class="patients-box">
+    <h2>Patients</h2>
+    <div class="search-bar">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search...">
+    </div>
+    <div class="table-container">
+      <table>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Patient ID</th>
+                        <th></th> <!-- Empty column for the lock button -->
+                        <th></th> <!-- Empty column for the request authorisation button -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="form-control" id="name1" placeholder="Name"></td>
+                        <td><input type="text" class="form-control" id="age1" placeholder="Age"></td>
+                        <td><input type="text" class="form-control" id="gender1" placeholder="Gender"></td>
+                        <td><input type="text" class="form-control" id="patientId1" placeholder="Patient ID"></td>
+                        <td><button class="request-button">Request Authorisation</button></td>
+                        <td><button class="lock-button">UL</button></td>
+                       
+                    </tr>
+          <!-- Add more rows as needed -->
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="your-patients-box">
+    <h2>Your Patients</h2>
+    <div class="search-bar2">
+        <input type="text" class="search-input2" placeholder="Search...">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Patient ID</th>
+                    <th></th> <!-- Empty column for the view button -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" class="form-control2" id="name1" placeholder="Name"></td>
+                    <td><input type="text" class="form-control2" id="age1" placeholder="Age"></td>
+                    <td><input type="text" class="form-control2" id="gender1" placeholder="Gender"></td>
+                    <td><input type="text" class="form-control2" id="patientId1" placeholder="Patient ID"></td>
+                    <td><button class="view-button">View</button></td>
+                </tr>
+                
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+  
+</body>
+</html>
+
+</div>
+
+</body>
+</html>
+</body>
+</html>

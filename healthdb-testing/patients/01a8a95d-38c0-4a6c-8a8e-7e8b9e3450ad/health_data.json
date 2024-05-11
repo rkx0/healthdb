@@ -1,0 +1,12 @@
+{
+    "patientId": "patient_id_here",
+    "data": {
+        "weight": "150",
+        "height": "50",
+        "bmi": "600.00",
+        "bodyFat": "707.25",
+        "totalBodyWater": "51.56",
+        "sleep": "5"
+    },
+    "implications": "BMI is low."
+}

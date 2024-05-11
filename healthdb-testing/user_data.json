@@ -1,0 +1,37 @@
+{
+    "Aiman Sadiq": {
+        "password": "12345",
+        "usertype": "patient",
+        "patient_id": "01a8a95d-38c0-4a6c-8a8e-7e8b9e3450ad"
+    },
+    "Abrar": {
+        "password": "12345",
+        "usertype": "patient",
+        "patient_id": "ae196847-3b29-479f-98aa-f57f09af8879"
+    },
+    "Adib Rabbani": {
+        "password": "1234",
+        "usertype": "patient",
+        "patient_id": "3a4994d5-d622-4d2e-a4f6-ec746ec1af9a"
+    },
+    "C69R3llY": {
+        "password": "12345",
+        "usertype": "patient",
+        "patient_id": "1e99dcbe-5484-4c3a-a737-cc546e5460b4"
+    },
+    "rabbani.27x": {
+        "password": "12345",
+        "usertype": "patient",
+        "patient_id": "b04613e5-1114-414f-b05f-910567cf63bd"
+    },
+    "semplicemente.imbarazzante@gmail.com": {
+        "password": "14",
+        "usertype": "patient",
+        "patient_id": "49f58a0f-7adb-416b-972b-d27636c49555"
+    },
+    "james": {
+        "password": "1234",
+        "usertype": "patient",
+        "patient_id": "f9fed90c-bce6-4b8a-b7a7-bef84408d541"
+    }
+}

@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Factor Input</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="left-div">
+    <div class="header">
+      <div class="profile-info-box">
+        <div class="personal-info">
+          <div class="form-group">
+            <label for="patient_id">Patient ID</label>
+            <input type="text" id="patient_id" placeholder="Enter patient ID">
+          </div>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Name" readonly>
+          </div>
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" placeholder="Age" readonly>
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <input type="text" id="gender" placeholder="Gender" readonly>
+          </div>
+          <div class="form-group">
+            <label for="country">Country</label>
+            <input type="text" id="country" placeholder="Country" readonly>
+          </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" placeholder="City" readonly>
+          </div>
+          <div class="form-group">
+            <label for="additionalInfo">Doctor's Note</label>
+            <textarea id="additionalInfo" rows="4" cols="100" placeholder="Additional information" style="width: 330%; resize: none;" readonly></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script>
+      function saveData() {
+    // Gather all data
+    const bmi = document.getElementById('healthFactorInput').value;
+    const bodyFat = document.getElementById('healthFactorInput1').value;
+    const heartRate = document.getElementById('healthFactorInput2').value;
+    const bloodPressure = document.getElementById('healthFactorInput3').value;
+    const bloodSugar = document.getElementById('healthFactorInput4').value;
+    const cholesterol = document.getElementById('healthFactorInput5').value;
+
+    // Create JSON object
+    const data = {
+        "BMI": bmi,
+        "BodyFat": bodyFat,
+        "HeartRate": heartRate,
+        "BloodPressure": bloodPressure,
+        "BloodSugar": bloodSugar,
+        "Cholesterol": cholesterol
+    };
+
+    // Send data to Python script
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "save_data.py", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText);
+        }
+    };
+    xhr.send(JSON.stringify(data));
+}
+
+  // Function to fetch patient information from JSON file
+  function fetchPatientInfo(patientId) {
+    // Construct the URL to the patient info JSON file
+    const url = `/patients/${patientId}/patient_info.json`;
+
+    // Fetch patient info from the JSON file
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch patient information');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Populate text boxes with patient information
+        document.getElementById('name').value = data.name;
+        document.getElementById('age').value = data.age;
+        document.getElementById('gender').value = data.gender;
+        document.getElementById('country').value = data.country;
+        document.getElementById('city').value = data.city;
+        document.getElementById('patient_id').value = patientId; // Set patient ID from URL
+        document.getElementById('additionalInfo').value = data.additionalInfo || ''; // Set Doctor's Note or blank if undefined
+      })
+      .catch(error => {
+        console.error(error);
+        // Handle errors here (e.g., display error message)
+      });
+  }
+
+  // Function to populate personal information based on patient ID
+  function populatePersonalInfo() {
+    const patientId = document.getElementById('patient_id').value;
+    fetchPatientInfo(patientId);
+  }
+
+  // Extract patient ID from the URL and call fetchPatientInfo function
+  const urlParams = new URLSearchParams(window.location.search);
+  const patientId = urlParams.get('patient_id');
+  if (patientId) {
+    fetchPatientInfo(patientId);
+  }
+
+  // Update calculate function to include logic for BMI implications
+  function calculate() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value) / 100; // Convert height to meters
+    const age = parseFloat(document.getElementById('age').value);
+    const gender = document.getElementById('gender').value.toLowerCase();
+
+    // Calculate BMI
+    const bmi = (weight / (height * height)).toFixed(2);
+    document.getElementById('bmi').value = bmi;
+
+    // Calculate body fat percentage based on gender
+    let bodyFat;
+    if (gender === 'male') {
+      bodyFat = (1.20 * bmi) + (0.23 * age) - 16.2;
+    } else if (gender === 'female') {
+      bodyFat = (1.20 * bmi) + (0.23 * age) - 5.4;
+    }
+    document.getElementById('bodyFat').value = bodyFat.toFixed(2);
+
+    // Calculate total body water
+    let totalBodyWater;
+    if (gender === 'male') {
+      totalBodyWater = 2.447 - (0.09156 * age) + (0.1074 * height) + (0.3362 * weight);
+    } else if (gender === 'female') {
+      totalBodyWater = -2.097 + (0.1069 * height) + (0.2466 * weight);
+    }
+    document.getElementById('totalBodyWater').value = totalBodyWater.toFixed(2);
+
+    // Populate implications text box based on BMI value
+    const implicationsTextBox = document.getElementById('implications');
+    if (bmi < 18.5) {
+      implicationsTextBox.value = 'Underweight: You may be at risk for health problems. Consider consulting a healthcare professional.';
+    } else if (bmi >= 18.5 && bmi < 25) {
+      implicationsTextBox.value = 'Normal weight: You are within the healthy weight range. Keep up the good work!';
+    } else if (bmi >= 25 && bmi < 30) {
+      implicationsTextBox.value = 'Overweight: You may be at risk for health problems. Consider adopting a healthier lifestyle.';
+    } else {
+      implicationsTextBox.value = 'Obese: You are at increased risk for many health problems. Consider seeking medical advice.';
+    }
+  }
+
+  // Event listeners for input changes
+  document.getElementById('weight').addEventListener('input', calculate);
+  document.getElementById('height').addEventListener('input', calculate);
+  document.getElementById('age').addEventListener('input', calculate);
+  document.getElementById('gender').addEventListener('change', calculate);
+
+  // Call calculate function initially to calculate values based on default input values
+  calculate();
+  </script>
+ <div class="big">
+   <div class="card1">
+       <!-- Heart Rate box content -->
+       <center>Heart Rate</center>
+       <form>
+           <div class="form-wrapper1">
+               <div class="form-top1">
+                   <div class="form-group form-top-left1">
+                       <label for="implications" class="form-label text-center">Implications</label>
+                       <textarea class="form-control" id="implicationsH" rows="3" placeholder="Describe implications..."></textarea>
+                   </div>
+                   <div class="form-group form-top-right1">
+                       <label for="actionNeeded" class="form-label text-center">Action Needed</label>
+                       <textarea class="form-control" id="actionNeededH" rows="3" placeholder="Describe actions..."></textarea>
+                   </div>
+               </div>
+               <div class="form-bottom1">
+                   <div class="form-group form-bottom-left1">
+                       <input type="text" class="form-control" id="healthFactorInput" placeholder="Enter health factor">
+                   </div>
+                   <div class="form-group form-bottom-right1">
+                       <input type="text" class="form-control" id="result" placeholder="HIGH/LOW/SAFE">
+                   </div>
+               </div>
+           </div>
+       </form>
+   </div>
+ 
+   <div class="card2">
+       <!-- New box content (identical to the heart rate box) -->
+       <center>Blood Preassure</center>
+       <form>
+           <div class="form-wrapper1">
+               <div class="form-top1">
+                   <div class="form-group form-top-left1">
+                       <label for="implications2" class="form-label text-center">Implications</label>
+                       <textarea class="form-control" id="implications2" rows="3" placeholder="Describe implications..."></textarea>
+                   </div>
+                   <div class="form-group form-top-right1">
+                       <label for="actionNeeded2" class="form-label text-center">Action Needed</label>
+                       <textarea class="form-control" id="actionNeeded2" rows="3" placeholder="Describe actions..."></textarea>
+                   </div>
+               </div>
+               <div class="form-bottom1">
+                   <div class="form-group form-bottom-left1">
+                       <input type="text" class="form-control" id="healthFactorInput2" placeholder="Enter health factor">
+                   </div>
+                   <div class="form-group form-bottom-right1">
+                       <input type="text" class="form-control" id="result2" placeholder="HIGH/LOW/SAFE">
+                   </div>
+               </div>
+           </div>
+       </form>
+   </div>
+   <!-- Duplicate the card1 and card2 for two more boxes -->
+   <div class="card1">
+       <!-- Heart Rate box content -->
+       <center>Blood Sugar</center>
+       <form>
+           <div class="form-wrapper1">
+               <div class="form-top1">
+                   <div class="form-group form-top-left1">
+                       <label for="implications3" class="form-label text-center">Implications</label>
+                       <textarea class="form-control" id="implications3" rows="3" placeholder="Describe implications..."></textarea>
+                   </div>
+                   <div class="form-group form-top-right1">
+                       <label for="actionNeeded3" class="form-label text-center">Action Needed</label>
+                       <textarea class="form-control" id="actionNeeded3" rows="3" placeholder="Describe actions..."></textarea>
+                   </div>
+               </div>
+               <div class="form-bottom1">
+                   <div class="form-group form-bottom-left1">
+                       <input type="text" class="form-control" id="healthFactorInput3" placeholder="Enter health factor">
+                   </div>
+                   <div class="form-group form-bottom-right1">
+                       <input type="text" class="form-control" id="result3" placeholder="HIGH/LOW/SAFE">
+                   </div>
+               </div>
+           </div>
+       </form>
+   </div>
+ 
+   <div class="card2">
+       <!-- New box content (identical to the heart rate box) -->
+       <center>Cholesterol</center>
+       <form>
+           <div class="form-wrapper1">
+               <div class="form-top1">
+                   <div class="form-group form-top-left1">
+                       <label for="implications4" class="form-label text-center">Implications</label>
+                       <textarea class="form-control" id="implications4" rows="3" placeholder="Describe implications..."></textarea>
+                   </div>
+                   <div class="form-group form-top-right1">
+                       <label for="actionNeeded4" class="form-label text-center">Action Needed</label>
+                       <textarea class="form-control" id="actionNeeded4" rows="3" placeholder="Describe actions..."></textarea>
+                   </div>
+               </div>
+               <div class="form-bottom1">
+                   <div class="form-group form-bottom-left1">
+                       <input type="text" class="form-control" id="healthFactorInput4" placeholder="Enter health factor">
+                   </div>
+                   <div class="form-group form-bottom-right1">
+                       <input type="text" class="form-control" id="result4" placeholder="HIGH/LOW/SAFE">
+                   </div>
+               </div>
+           </div>
+       </form>
+   </div>
+</div>
+
+
+<div class="card summary-card">
+  <div class="card-body">
+    <div class="form-group">
+      <label for="weight">Weight (kg)</label>
+      <input type="number" class="form-control" id="weight" placeholder="Enter weight" maxlength="3">
+    </div>
+    <div class="form-group">
+      <label for="height">Height (cm)</label>
+      <input type="number" class="form-control" id="height" placeholder="Enter height" maxlength="3">
+    </div>
+    <div class="form-group">
+      <label for="bmi">BMI</label>
+      <input type="text" class="form-control" id="bmi" placeholder="BMI" readonly>
+    </div>
+    <div class="form-group">
+      <label for="bodyFat">Body Fat (%)</label>
+      <input type="text" class="form-control" id="bodyFat" placeholder="Body Fat %" readonly>
+    </div>
+
+    <div class="form-group">
+      <label for="sleep">Sleep</label>
+      <input type="text" class="form-control" id="sleep" placeholder="in hours">
+    </div>
+    
+    <div class="form-group">
+      <label for="totalBodyWater">Total Body Water</label>
+      <input type="text" class="form-control" id="totalBodyWater" placeholder="Enter total body water" readonly>
+    </div>
+    <div class="form-group">
+      <label for="implications">Implications</label>
+      <textarea class="form-control" id="implications" rows="3" placeholder="Describe implications..."></textarea>
+    </div>
+    <div class="form-group">
+      <label for="actionNeeded">Actions Needed</label>
+      <textarea class="form-control" id="actionNeeded" rows="3" placeholder="Describe actions..."></textarea>
+    </div>
+    <button onclick="saveData()">Save Data</button>
+
+  </div>
+</div>
+</div>
+<script>
+// Function to calculate BMI, body fat, total body water, and update implications based on user input
+function calculate() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value) / 100; // Convert height to meters
+    const age = parseFloat(document.getElementById('age').value);
+    const gender = document.getElementById('gender').value.toLowerCase();
+    const sleep = parseFloat(document.getElementById('sleep').value);
+
+    // Calculate BMI
+    const bmi = (weight / (height * height)).toFixed(2);
+    document.getElementById('bmi').value = bmi;
+
+    // Calculate body fat percentage based on gender
+    let bodyFat;
+    if (gender === 'male') {
+        bodyFat = (1.20 * bmi) + (0.23 * age) - 16.2;
+    } else if (gender === 'female') {
+        bodyFat = (1.20 * bmi) + (0.23 * age) - 5.4;
+    }
+    document.getElementById('bodyFat').value = bodyFat.toFixed(2);
+
+    // Calculate total body water
+    let totalBodyWater;
+    if (gender === 'male') {
+        totalBodyWater = 2.447 - (0.09156 * age) + (0.1074 * height) + (0.3362 * weight);
+    } else if (gender === 'female') {
+        totalBodyWater = -2.097 + (0.1069 * height) + (0.2466 * weight);
+    }
+    document.getElementById('totalBodyWater').value = totalBodyWater.toFixed(2);
+
+    // Update implications based on BMI value
+    updateImplications();
+
+    // Update heart rate result
+    updateHeartRateResult();
+
+    // Update implications and actions needed for body fat, sleep, and total body water
+    updateBodyFatImplications();
+    updateActionsNeeded();
+}
+
+// Function to update implications textarea based on BMI value
+function updateImplications() {
+    const bmi = parseFloat(document.getElementById('bmi').value);
+    const implicationsTextarea = document.getElementById('implications');
+
+    if (bmi >= 30) {
+        implicationsTextarea.value = "High BMI indicates obesity. Consider consulting a healthcare professional.";
+    } else if (bmi >= 25) {
+        implicationsTextarea.value = "BMI is in the overweight range. It's recommended to focus on healthy lifestyle changes.";
+    } else if (bmi >= 18.5) {
+        implicationsTextarea.value = "BMI is in the healthy range. Keep up the good work!";
+    } else {
+        implicationsTextarea.value = "Low BMI may indicate underweight. It's advised to consult with a healthcare professional.";
+    }
+}
+
+// Function to update actions needed based on BMI value
+function updateActionsNeeded() {
+    const bmi = parseFloat(document.getElementById('bmi').value);
+    const actionNeededTextarea = document.getElementById('actionNeeded');
+
+    if (bmi >= 30) {
+        actionNeededTextarea.value = "Action needed for obesity...";
+    } else if (bmi >= 25) {
+        actionNeededTextarea.value = "Action needed for overweight...";
+    } else if (bmi >= 18.5) {
+        actionNeededTextarea.value = "No specific action needed for healthy weight.";
+    } else {
+        actionNeededTextarea.value = "Action needed for underweight...";
+    }
+}
+
+// Function to update implications and actions needed for body fat
+function updateBodyFatImplications() {
+    const bodyFat = parseFloat(document.getElementById('bodyFat').value);
+    const implicationsTextarea = document.getElementById('implications');
+    const actionNeededTextarea = document.getElementById('actionNeeded');
+
+    if (bodyFat >= 25) {
+        implicationsTextarea.value += "High body fat percentage indicates increased health risks. Consider adopting a healthier lifestyle.";
+        actionNeededTextarea.value += "Action needed to reduce body fat percentage through diet and exercise.";
+    }
+}
+
+// Function to update heart rate result
+function updateHeartRateResult() {
+    const heartRate = parseFloat(document.getElementById('healthFactorInput').value);
+    const resultTextBox = document.getElementById('result');
+    const implicationsHTextarea = document.getElementById('implicationsH');
+    const actionNeededHTextarea = document.getElementById('actionNeededH');
+    
+    if (heartRate < 60) {
+        resultTextBox.value = 'Low';
+        implicationsHTextarea.value = 'Heart rate is below normal.';
+        actionNeededHTextarea.value = 'Heart rate is below normal.';
+        
+    } else if (heartRate >= 60 && heartRate <= 100) {
+        resultTextBox.value = 'Normal';
+        implicationsHTextarea.value = 'Heart rate is within the normal range.';
+        actionNeededHTextarea.value = 'Heart rate is normal .';
+    } else {
+        resultTextBox.value = 'High';
+        implicationsHTextarea.value = 'Heart rate is above normal.';
+        actionNeededHTextarea.value = 'Heart rate is above normal.';
+    }
+}
+
+function updateBloodPressureResult() {
+    console.log('Updating blood pressure result...');
+    
+    const bloodPressure = parseFloat(document.getElementById('healthFactorInput2').value);
+    console.log('Blood pressure:', bloodPressure);
+
+    const resultTextBox = document.getElementById('result2');
+    const implications2Textarea = document.getElementById('implications2');
+    const actionNeeded2Textarea = document.getElementById('actionNeeded2');
+    
+    if (!isNaN(bloodPressure)) {
+        if (bloodPressure < 90) {
+            resultTextBox.value = 'Low';
+            implications2Textarea.value = 'Blood pressure is below the normal range.';
+            actionNeeded2Textarea.value = 'Blood pressure is below the normal range.';
+        } else if (bloodPressure > 120) {
+            resultTextBox.value = 'High';
+            implications2Textarea.value = 'Blood pressure is above the normal range.';
+            actionNeeded2Textarea.value = 'Blood pressure is above the normal range.';
+        } else {
+            resultTextBox.value = 'Normal';
+            implications2Textarea.value = 'Blood pressure is within the normal range.';
+            actionNeeded2Textarea.value = 'Blood pressure is normal.';
+        }
+    } else {
+        console.log('Invalid input value:', document.getElementById('healthFactorInput2').value);
+    }
+}
+
+// Bind the function to the input event
+document.getElementById('healthFactorInput2').addEventListener('input', updateBloodPressureResult);
+
+// Initial call to ensure the result is calculated when the page loads
+updateBloodPressureResult();
+function updateCholesterolResult() {
+    console.log('Updating cholesterol result...');
+
+    const cholesterol = parseFloat(document.getElementById('healthFactorInput4').value);
+    console.log('Cholesterol:', cholesterol);
+
+    const resultTextBox = document.getElementById('result4');
+    const implications4Textarea = document.getElementById('implications4');
+    const actionNeeded4Textarea = document.getElementById('actionNeeded4');
+
+    if (!isNaN(cholesterol)) {
+        if (cholesterol < 200) {
+            resultTextBox.value = 'Low';
+            implications4Textarea.value = 'Cholesterol is below the normal range.';
+            actionNeeded4Textarea.value = 'Cholesterol is below the normal range.';
+        } else if (cholesterol >= 200 && cholesterol <= 239) {
+            resultTextBox.value = 'Normal';
+            implications4Textarea.value = 'Cholesterol is within the normal range.';
+            actionNeeded4Textarea.value = 'Cholesterol is normal.';
+        } else {
+            resultTextBox.value = 'High';
+            implications4Textarea.value = 'Cholesterol is above the normal range.';
+            actionNeeded4Textarea.value = 'Cholesterol is above the normal range.';
+        }
+    } else {
+        console.log('Invalid input value:', document.getElementById('healthFactorInput4').value);
+    }
+}
+
+// Bind the function to the input event
+document.getElementById('healthFactorInput4').addEventListener('input', updateCholesterolResult);
+
+// Initial call to ensure the result is calculated when the page loads
+updateCholesterolResult();
+
+
+function updateBloodSugarResult() {
+    console.log('Updating blood sugar result...');
+
+    const bloodSugar = parseFloat(document.getElementById('healthFactorInput3').value);
+    console.log('Blood sugar:', bloodSugar);
+
+    const resultTextBox = document.getElementById('result3');
+    const implications3Textarea = document.getElementById('implications3');
+    const actionNeeded3Textarea = document.getElementById('actionNeeded3');
+
+    if (!isNaN(bloodSugar)) {
+        if (bloodSugar < 70) {
+            resultTextBox.value = 'Low';
+            implications3Textarea.value = 'Blood sugar is below the normal range.';
+            actionNeeded3Textarea.value = 'Blood sugar is below the normal range.';
+        } else if (bloodSugar > 100) {
+            resultTextBox.value = 'High';
+            implications3Textarea.value = 'Blood sugar is above the normal range.';
+            actionNeeded3Textarea.value = 'Blood sugar is above the normal range.';
+        } else {
+            resultTextBox.value = 'Normal';
+            implications3Textarea.value = 'Blood sugar is within the normal range.';
+            actionNeeded3Textarea.value = 'Blood sugar is normal.';
+        }
+    } else {
+        console.log('Invalid input value:', document.getElementById('healthFactorInput3').value);
+    }
+}
+
+// Bind the function to the input event
+document.getElementById('healthFactorInput3').addEventListener('input', updateBloodSugarResult);
+
+// Initial call to ensure the result is calculated when the page loads
+updateBloodSugarResult();
+
+
+
+
+// Function to save data
+function saveData() {
+    const weight = document.getElementById('weight').value;
+    const height = document.getElementById('height').value;
+    const bmi = document.getElementById('bmi').value;
+    const bodyFat = document.getElementById('bodyFat').value;
+    const totalBodyWater = document.getElementById('totalBodyWater').value;
+    const sleep = document.getElementById('sleep').value;
+
+    // Patient ID obtained from server-side (you need to pass it to this function)
+    const patientId = 'patient_id_here';
+
+    // Create a JSON object with input and output data, including sleep
+    const data = {
+        weight: weight,
+        height: height,
+        bmi: bmi,
+        bodyFat: bodyFat,
+        totalBodyWater: totalBodyWater,
+        sleep: sleep  // Include sleep data here
+    };
+
+    // Send data to server using AJAX
+    fetch('/save_patient_data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ patientId: patientId, data: data })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Data saved successfully:', data);
+        alert('Data saved successfully!');
+    })
+    .catch(error => {
+        console.error('Error saving data:', error);
+        alert('Error saving data. Please try again.');
+    });
+}
+
+// Event listeners for input changes
+document.getElementById('weight').addEventListener('input', calculate);
+document.getElementById('height').addEventListener('input', calculate);
+document.getElementById('age').addEventListener('input', calculate);
+document.getElementById('gender').addEventListener('change', calculate);
+document.getElementById('sleep').addEventListener('input', calculate);
+document.getElementById('healthFactorInput').addEventListener('input', updateHeartRateResult);
+
+// Call calculate function initially to calculate values based on default input values
+calculate();
+
+</script>
+  
+<div class="blood-work-box">
+<h2>Blood Work</h2>
+<div class="scrollable-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Test</th>
+        <th>Results</th>
+        <th>Analysis</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr><tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr><tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr><tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr><tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr><tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr><tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr><tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr><tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr><tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+
+
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr><tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+      <tr>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-control2" id="Input" placeholder="input"></td>
+        <td><input type="text" class="form-controle" id="Input" placeholder="input"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+</html>
